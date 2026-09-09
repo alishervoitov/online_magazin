@@ -69,3 +69,17 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name="Mahsulot")
+    image = models.ImageField(upload_to='products/', verbose_name="Rasm")
+    is_main = models.BooleanField(default=False, verbose_name="Asosiy rasmmi?")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Mahsulot rasmi"
+        verbose_name_plural = "Mahsulot rasmlari"
+
+    def __str__(self):
+        return f"{self.product.title} - rasm"
