@@ -7,3 +7,8 @@ urlpatterns = [
     path('item/<int:item_id>/remove/', RemoveFromCartView.as_view(), name='cart_item_remove'),
 
 ]
+
+
+##https://makeupstore.uz/product/670216/
+##https://makeupstore.uz/product/727524/
+##https://makeupstore.uz/product/470742/
