@@ -43,3 +43,14 @@ class AddToCartView(APIView):
 
         serializer = CartSerializer(cart)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class RemoveFromCartView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, item_id):
+        try:
+            cart_item = CartItem.objects.get(id=item_id, cart__user=request.user)
+            cart_item.delete()
+            return Response({"message": "Mahsulot savatchadan o'chirildi."}, status=status.HTTP_200_OK)
+        except CartItem.DoesNotExist:
+            return Response({"error": "Element topilmadi."}, status=status.HTTP_404_NOT_FOUND)
