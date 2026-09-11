@@ -54,3 +54,33 @@ class RemoveFromCartView(APIView):
             return Response({"message": "Mahsulot savatchadan o'chirildi."}, status=status.HTTP_200_OK)
         except CartItem.DoesNotExist:
             return Response({"error": "Element topilmadi."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UpdateCartItemView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, item_id):
+        quantity = request.data.get('quantity')
+
+        if quantity is None:
+            return Response({"error": "Miqdor (quantity) ko'rsatilishi shart."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            quantity = int(quantity)
+        except ValueError:
+            return Response({"error": "Miqdor raqam bo'lishi kerak."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if quantity <= 0:
+            return Response(
+                {"error": "Miqdor 0 dan katta bo'lishi kerak. O'chirish uchun delete metodidan foydalaning."},
+                status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cart_item = CartItem.objects.get(id=item_id, cart__user=request.user)
+            cart_item.quantity = quantity
+            cart_item.save()
+
+            serializer = CartSerializer(cart_item.cart)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except CartItem.DoesNotExist:
+            return Response({"error": "Savatchada bunday element topilmadi."}, status=status.HTTP_404_NOT_FOUND)
