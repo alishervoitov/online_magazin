@@ -44,6 +44,8 @@ class Product(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Qo'shilgan vaqti")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="O'zgartirilgan vaqti")
+    average_rating = models.DecimalField(max_digits=3, decimal_places=1, default=0.0, verbose_name="O'rtacha reyting")
+    reviews_count = models.PositiveIntegerField(default=0, verbose_name="Izohlar soni")
 
     class Meta:
         verbose_name = "Mahsulot"
